@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html lang="ru"><head><meta charset="utf-8">
+<html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Портфолио</title>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('portfolio-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')}catch(e){document.documentElement.dataset.theme='light'}</script>
+<title>Portfolio</title>
 <style>
-:root{--bg:#f4f7f8;--card:#fff;--ink:#13232a;--mute:#586b74;--line:#d8e1e4;--acc:#0b6e7f;--accbg:#e1f1f4;--code:#0f1c22;--codeink:#d6e8ee;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d1619;--card:#152126;--ink:#e3edf0;--mute:#94a9b2;--line:#27373e;--acc:#5cc4d6;--accbg:#17333a;--code:#0a1215}}
+:root{--bg:#f4f7f8;--card:#fff;--ink:#13232a;--mute:#586b74;--line:#d8e1e4;--acc:#0b6e7f;--accbg:#e1f1f4;--code:#0f1c22;--codeink:#d6e8ee;--accink:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme=dark]{--bg:#0d1619;--card:#152126;--ink:#e3edf0;--mute:#94a9b2;--line:#27373e;--acc:#5cc4d6;--accbg:#17333a;--code:#0a1215;--accink:#06161a}
 *{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:1080px;margin:auto;padding:20px}
 a{color:var(--acc)}:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.toolbar{display:flex;justify-content:flex-end;gap:10px;align-items:center}.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}.seg button,.theme{min-width:42px;border:0;background:transparent;color:var(--ink);padding:6px 11px;font:600 .85rem/1 system-ui,sans-serif;cursor:pointer}.seg button+button{border-left:1px solid var(--line)}.seg button[aria-pressed=true]{background:var(--acc);color:var(--accink)}.theme{width:42px;height:38px;border:1px solid var(--line);border-radius:8px;background:var(--card);font-size:1.2rem;line-height:1}
 .hero{padding:44px 0 26px}.hero h1{font:700 clamp(2rem,6vw,3.2rem)/1.1 Georgia,"Times New Roman",serif;margin:0 0 6px}
 .hero .t{font-size:1.15rem;color:var(--acc);font-weight:600;margin-bottom:12px}.hero p{max-width:640px;color:var(--mute);margin:0 0 16px}
-.links{display:flex;gap:8px;flex-wrap:wrap}.links a,.btn{display:inline-block;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 14px;border-radius:99px;text-decoration:none;font-size:.92rem;cursor:pointer;font-family:inherit}
+.contact{display:flex;gap:8px 18px;flex-wrap:wrap;color:var(--mute);font-size:.92rem;margin:16px 0 12px}.contact a{color:var(--ink);text-decoration:none}.contact a:hover{color:var(--acc)}.links{display:flex;gap:8px;flex-wrap:wrap}.links a,.btn{display:inline-block;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 14px;border-radius:8px;text-decoration:none;font-size:.92rem;cursor:pointer;font-family:inherit}
 .links a:hover,.btn:hover{border-color:var(--acc)}.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}
-@media(prefers-color-scheme:dark){.btn.p{color:#06161a}}
+.btn.p{color:var(--accink)}
 .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0 16px}
 .bar input{flex:1;min-width:180px;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
 .chip{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:3px 12px;border-radius:99px;font:inherit;font-size:.85rem;cursor:pointer}.chip[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#fff}
-@media(prefers-color-scheme:dark){.chip[aria-pressed=true]{color:#06161a}}
+.chip[aria-pressed=true]{color:var(--accink)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit}.card:hover{border-color:var(--acc)}
 .cov{height:130px;background:linear-gradient(135deg,var(--acc),#1d3a6b);display:flex;align-items:flex-end;padding:10px;background-size:cover;background-position:center}
@@ -33,6 +35,7 @@ pre{margin:0;background:var(--code);color:var(--codeink);padding:14px;overflow:a
 .gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;padding:10px}.gal img{width:100%;border-radius:8px;border:1px solid var(--line)}
 .note{padding:14px;color:var(--mute)}footer{color:var(--mute);font-size:.85rem;padding:30px 0}
 </style></head><body><div class="wrap">
+<div class="toolbar" role="group" aria-label="Language and appearance"><div class="seg"><button type="button" data-language="en" aria-pressed="true">EN</button><button type="button" data-language="ru" aria-pressed="false">RU</button></div><button class="theme" id="theme" type="button" aria-label="Switch to dark theme" title="Switch to dark theme">☾</button></div>
 <div id="app"></div><footer id="foot"></footer></div>
 <script>
 const $=id=>document.getElementById(id);
@@ -40,38 +43,46 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 const safe=u=>/^(https?:|mailto:|[\w./%-]+$)/i.test(u||'')?u:'#';
 const ext=u=>((u||'').split('?')[0].split('.').pop()||'').toLowerCase();
 const driveId=s=>{if(!s)return'';const m=String(s).match(/\/(?:d|folders)\/([\w-]{15,})|[?&]id=([\w-]{15,})/);return m?(m[1]||m[2]):(/^[\w-]{15,}$/.test(s)?s:'')};
-const TYPES={html:'Демо',app:'Приложение',python:'Python',excel:'Excel',powerbi:'Power BI',drive:'Google Drive',link:'Ссылка'};
+const UI={en:{search:'Search projects',searchLabel:'Search projects',empty:'No projects found.',all:'All projects',open:'Open in new tab',demo:'Live demo',colab:'Open in Google Colab',repo:'View on GitHub',download:'Download file',driveDownload:'Download from Google Drive',driveFolder:'Google Drive folder',copy:'Copy code',copied:'Copied',loadFail:'Could not load portfolio.json. Open this site through a local server or publish it with GitHub Pages.',fileFail:'Could not load the file.',loading:'Loading spreadsheet…',sheetFail:'Could not open the spreadsheet. Check the file path in portfolio.json.',rows:'Showing the first 500 rows.',location:'Location',themeGroup:'Language and appearance'},ru:{search:'Поиск по проектам',searchLabel:'Поиск по проектам',empty:'Проекты не найдены.',all:'Все проекты',open:'Открыть в новой вкладке',demo:'Живое демо',colab:'Открыть в Google Colab',repo:'Код на GitHub',download:'Скачать файл',driveDownload:'Скачать с Google Drive',driveFolder:'Папка на Google Drive',copy:'Копировать код',copied:'Скопировано',loadFail:'Не удалось загрузить portfolio.json. Откройте сайт через локальный сервер или опубликуйте его на GitHub Pages.',fileFail:'Не удалось загрузить файл.',loading:'Загрузка таблицы…',sheetFail:'Не удалось открыть таблицу. Проверьте путь к файлу в portfolio.json.',rows:'Показаны первые 500 строк.',location:'Местоположение',themeGroup:'Язык и оформление'}};
+const TYPES={en:{html:'Demo',app:'Application',python:'Python',excel:'Excel',powerbi:'Power BI',drive:'Google Drive',link:'Link'},ru:{html:'Демо',app:'Приложение',python:'Python',excel:'Excel',powerbi:'Power BI',drive:'Google Drive',link:'Ссылка'}};
+let language=localStorage.getItem('portfolio-language')==='ru'?'ru':'en',theme=document.documentElement.dataset.theme||'light';
+const tr=k=>UI[language][k],localized=(obj,key)=>obj[language==='en'?key+'En':key]||obj[key]||'',typeLabel=t=>TYPES[language][t]||t;
+function updateControls(){document.documentElement.lang=language;document.querySelectorAll('[data-language]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.language===language)));$('theme').textContent=theme==='dark'?'☀':'☾';$('theme').title=language==='en'?(theme==='dark'?'Switch to light theme':'Switch to dark theme'):(theme==='dark'?'Переключить на светлую тему':'Переключить на тёмную тему');$('theme').setAttribute('aria-label',$('theme').title);document.querySelector('.toolbar').setAttribute('aria-label',tr('themeGroup'))}
+document.querySelectorAll('[data-language]').forEach(b=>b.onclick=()=>{language=b.dataset.language;localStorage.setItem('portfolio-language',language);updateControls();route()});
+$('theme').onclick=()=>{theme=theme==='dark'?'light':'dark';document.documentElement.dataset.theme=theme;localStorage.setItem('portfolio-theme',theme);updateControls()};updateControls();
 function typeOf(p){if(p.type)return p.type;const e=ext(p.file||p.download);return{html:'html',htm:'html',py:'python',ipynb:'python',xlsx:'excel',xls:'excel',csv:'excel',pbix:'powerbi'}[e]||(p.colab?'python':p.embed?'powerbi':p.drive||p.driveFolder?'drive':'link')}
 let DB={profile:{},projects:[]},tag='',q='';
 async function boot(){
- try{const r=await fetch('portfolio.json',{cache:'no-cache'});if(!r.ok)throw 0;DB=await r.json()}catch(e){$('app').innerHTML='<p class="note">Не удалось загрузить portfolio.json. Если вы открыли файл двойным кликом, запустите локальный сервер (python -m http.server) или опубликуйте сайт на GitHub Pages.</p>';return}
- document.title=(DB.profile.name||'Портфолио');route();
+ try{const r=await fetch('portfolio.json',{cache:'no-cache'});if(!r.ok)throw 0;DB=await r.json()}catch(e){$('app').innerHTML=`<p class="note">${tr('loadFail')}</p>`;return}
+ route();
 }
 function route(){const id=decodeURIComponent(location.hash.replace(/^#\/?/,''));const p=DB.projects.find(x=>x.id===id);p?detail(p):home();scrollTo(0,0)}
 addEventListener('hashchange',route);
 function home(){
  const P=DB.profile,all=DB.projects.filter(p=>!p.hidden),tags=[...new Set(all.flatMap(p=>p.tags||[]))].sort();
- const list=all.filter(p=>(!tag||(p.tags||[]).includes(tag))&&(p.title+' '+p.summary+' '+(p.tags||[]).join(' ')).toLowerCase().includes(q));
- $('app').innerHTML=`<div class="hero"><h1>${esc(P.name)}</h1><div class="t">${esc(P.title)}</div><p>${esc(P.about)}</p><div class="links">${(P.links||[]).map(l=>`<a href="${esc(safe(l.url))}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join('')}</div></div>
- <div class="bar"><input id="q" placeholder="Поиск по проектам" value="${esc(q)}" aria-label="Поиск"><span>${tags.map(t=>`<button class="chip" aria-pressed="${t===tag}" data-tag="${esc(t)}">${esc(t)}</button>`).join(' ')}</span></div>
- <div class="grid">${list.map(card).join('')||'<p class="note">Ничего не найдено.</p>'}</div>`;
- $('foot').textContent=`© ${new Date().getFullYear()} ${P.name||''}`;
+ const list=all.filter(p=>(!tag||(p.tags||[]).includes(tag))&&(`${localized(p,'title')} ${localized(p,'summary')} ${(p.tags||[]).join(' ')}`).toLowerCase().includes(q));
+ document.title=localized(P,'name')||'Portfolio';
+ $('app').innerHTML=`<div class="hero"><h1>${esc(localized(P,'name'))}</h1><div class="t">${esc(localized(P,'title'))}</div><p>${esc(localized(P,'about'))}</p><div class="contact"><span>${esc(tr('location'))}: ${esc(P.location||'')}</span>${P.email?`<a href="mailto:${esc(P.email)}">${esc(P.email)}</a>`:''}${P.phone?`<a href="tel:${esc(P.phone.replace(/[^+\d]/g,''))}">${esc(P.phone)}</a>`:''}</div><div class="links">${(P.links||[]).map(l=>`<a href="${esc(safe(l.url))}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join('')}</div></div>
+ <div class="bar"><input id="q" placeholder="${tr('search')}" value="${esc(q)}" aria-label="${tr('searchLabel')}"><span>${tags.map(t=>`<button class="chip" aria-pressed="${t===tag}" data-tag="${esc(t)}">${esc(t)}</button>`).join(' ')}</span></div>
+ <div class="grid">${list.map(card).join('')||`<p class="note">${tr('empty')}</p>`}</div>`;
+ $('foot').textContent=`© ${new Date().getFullYear()} ${localized(P,'name')||''}`;
  $('q').oninput=e=>{q=e.target.value.toLowerCase();const pos=e.target.selectionStart;home();$('q').focus();$('q').setSelectionRange(pos,pos)};
  document.querySelectorAll('[data-tag]').forEach(b=>b.onclick=()=>{tag=tag===b.dataset.tag?'':b.dataset.tag;home()});
 }
 function card(p){const t=typeOf(p),img=(p.cover||(p.images||[])[0]);
- return`<a class="card" href="#/${encodeURIComponent(p.id)}"><div class="cov" ${img?`style="background-image:url('${esc(safe(img))}')"`:''}><span class="badge">${esc(TYPES[t]||t)}</span></div><div class="b"><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p><div class="tags">${(p.tags||[]).map(x=>`<span>${esc(x)}</span>`).join('')}</div></div></a>`}
+ return`<a class="card" href="#/${encodeURIComponent(p.id)}"><div class="cov" ${img?`style="background-image:url('${esc(safe(img))}')"`:''}><span class="badge">${esc(typeLabel(t))}</span></div><div class="b"><h3>${esc(localized(p,'title'))}</h3><p>${esc(localized(p,'summary'))}</p><div class="tags">${(p.tags||[]).map(x=>`<span>${esc(x)}</span>`).join('')}</div></div></a>`}
 function detail(p){
  const t=typeOf(p),did=driveId(p.drive),fid=driveId(p.driveFolder),acts=[];
- if(p.file&&t==='html')acts.push(`<a class="btn p" href="${esc(safe(p.file))}" target="_blank" rel="noopener">Открыть в новой вкладке</a>`);
- if(p.demo)acts.push(`<a class="btn p" href="${esc(safe(p.demo))}" target="_blank" rel="noopener">Живое демо</a>`);
- if(p.colab)acts.push(`<a class="btn p" href="${esc(safe(p.colab))}" target="_blank" rel="noopener">Открыть в Google Colab</a>`);
- if(p.repo)acts.push(`<a class="btn" href="${esc(safe(p.repo))}" target="_blank" rel="noopener">Код на GitHub</a>`);
- if(p.file&&t!=='html')acts.push(`<a class="btn" href="${esc(safe(p.file))}" download>Скачать файл</a>`);
- if(p.download)acts.push(`<a class="btn p" href="${esc(safe(p.download))}" download>Скачать</a>`);
- if(did)acts.push(`<a class="btn" href="https://drive.google.com/uc?export=download&id=${did}" target="_blank" rel="noopener">Скачать с Google Drive</a>`);
- if(fid)acts.push(`<a class="btn" href="https://drive.google.com/drive/folders/${fid}" target="_blank" rel="noopener">Папка на Google Drive</a>`);
- $('app').innerHTML=`<div class="back"><a href="#/">← Все проекты</a></div><div class="det"><span class="badge" style="background:var(--acc)">${esc(TYPES[t]||t)}</span><h2>${esc(p.title)}</h2><p>${esc(p.summary)}</p><div class="tags">${(p.tags||[]).map(x=>`<span>${esc(x)}</span>`).join('')}</div><div class="acts">${acts.join('')}</div>${p.notes?`<p class="note" style="padding:0">${esc(p.notes)}</p>`:''}<div id="v"></div></div>`;
+ if(p.file&&t==='html')acts.push(`<a class="btn p" href="${esc(safe(p.file))}" target="_blank" rel="noopener">${tr('open')}</a>`);
+ if(p.demo)acts.push(`<a class="btn p" href="${esc(safe(p.demo))}" target="_blank" rel="noopener">${tr('demo')}</a>`);
+ if(p.colab)acts.push(`<a class="btn p" href="${esc(safe(p.colab))}" target="_blank" rel="noopener">${tr('colab')}</a>`);
+ if(p.repo)acts.push(`<a class="btn" href="${esc(safe(p.repo))}" target="_blank" rel="noopener">${tr('repo')}</a>`);
+ if(p.file&&t!=='html')acts.push(`<a class="btn" href="${esc(safe(p.file))}" download>${tr('download')}</a>`);
+ if(p.download)acts.push(`<a class="btn p" href="${esc(safe(p.download))}" download>${tr('download')}</a>`);
+ if(did)acts.push(`<a class="btn" href="https://drive.google.com/uc?export=download&id=${did}" target="_blank" rel="noopener">${tr('driveDownload')}</a>`);
+ if(fid)acts.push(`<a class="btn" href="https://drive.google.com/drive/folders/${fid}" target="_blank" rel="noopener">${tr('driveFolder')}</a>`);
+ document.title=`${localized(p,'title')} | ${localized(DB.profile,'name')||'Portfolio'}`;
+ $('app').innerHTML=`<div class="back"><a href="#/">← ${tr('all')}</a></div><div class="det"><span class="badge" style="background:var(--acc)">${esc(typeLabel(t))}</span><h2>${esc(localized(p,'title'))}</h2><p>${esc(localized(p,'summary'))}</p><div class="tags">${(p.tags||[]).map(x=>`<span>${esc(x)}</span>`).join('')}</div><div class="acts">${acts.join('')}</div>${localized(p,'notes')?`<p class="note" style="padding:0">${esc(localized(p,'notes'))}</p>`:''}<div id="v"></div></div>`;
  view(p,t,did,fid);
 }
 const box=h=>$('v').innerHTML=`<div class="view">${h}</div>`;
@@ -89,19 +100,19 @@ async function view(p,t,did,fid){
 function hl(src){const re=/("""[\s\S]*?"""|'''[\s\S]*?'''|'[^'\n]*'|"[^"\n]*")|(#[^\n]*)|\b(def|class|import|from|as|return|if|elif|else|for|while|in|not|and|or|with|try|except|finally|raise|lambda|None|True|False|yield|pass|break|continue|is)\b|\b(\d+\.?\d*)\b/g;
  return esc(src).replace(/&quot;/g,'"').replace(re,(m,s,c,k,n)=>s?`<span class="s">${s}</span>`:c?`<span class="c">${c}</span>`:k?`<span class="k">${k}</span>`:`<span class="n">${n}</span>`)}
 async function code(p){
- let txt;try{const r=await fetch(p.file);if(!r.ok)throw 0;txt=await r.text()}catch(e){return box('<p class="note">Не удалось загрузить файл.</p>')}
+ let txt;try{const r=await fetch(p.file);if(!r.ok)throw 0;txt=await r.text()}catch(e){return box(`<p class="note">${tr('fileFail')}</p>`)}
  if(ext(p.file)==='ipynb'){try{txt=JSON.parse(txt).cells.map(c=>c.cell_type==='markdown'?'# '+[].concat(c.source).join('').replace(/\n/g,'\n# '):[].concat(c.source).join('')).join('\n\n')}catch(e){}}
- box(`<div class="tabs"><button class="chip" id="cp">Копировать код</button></div><pre><code>${hl(txt)}</code></pre>`);
- $('cp').onclick=()=>navigator.clipboard.writeText(txt).then(()=>$('cp').textContent='Скопировано')
+ box(`<div class="tabs"><button class="chip" id="cp">${tr('copy')}</button></div><pre><code>${hl(txt)}</code></pre>`);
+ $('cp').onclick=()=>navigator.clipboard.writeText(txt).then(()=>$('cp').textContent=tr('copied'))
 }
 function loadX(){return window.XLSX?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
 async function sheet(p){
- box('<p class="note">Загрузка таблицы…</p>');
+ box(`<p class="note">${tr('loading')}</p>`);
  try{await loadX();const r=await fetch(p.file);if(!r.ok)throw 0;const wb=XLSX.read(await r.arrayBuffer(),{type:'array',cellDates:true});
   const show=n=>{const rows=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:false,defval:''}).slice(0,500);
-   box(`<div class="tabs">${wb.SheetNames.map(s=>`<button class="chip" aria-pressed="${s===n}" data-s="${esc(s)}">${esc(s)}</button>`).join('')}</div><div class="xt"><table><thead><tr>${(rows[0]||[]).map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.slice(1).map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="note">Показаны первые 500 строк листа.</p>`);
+  box(`<div class="tabs">${wb.SheetNames.map(s=>`<button class="chip" aria-pressed="${s===n}" data-s="${esc(s)}">${esc(s)}</button>`).join('')}</div><div class="xt"><table><thead><tr>${(rows[0]||[]).map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.slice(1).map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="note">${tr('rows')}</p>`);
    document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>show(b.dataset.s))};
-  show(wb.SheetNames[0])}catch(e){box('<p class="note">Не удалось открыть таблицу. Проверьте путь к файлу в portfolio.json.</p>')}
+  show(wb.SheetNames[0])}catch(e){box(`<p class="note">${tr('sheetFail')}</p>`)}
 }
 boot();
 </script></body></html>

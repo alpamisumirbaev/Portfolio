@@ -1,12 +1,26 @@
 {
   "profile": {
     "name": "Умирбаев Алпамыс",
-    "title": "Junior Data Analyst",
+    "nameEn": "Alpamis Umirbaev",
+    "title": "Младший аналитик данных",
+    "titleEn": "Junior Data Analyst",
     "about": "Анализ данных, SQL, Python, Power BI и Excel. Делаю дашборды, учётные системы и автоматизацию — от базы данных до готового интерфейса.",
+    "aboutEn": "Data analyst working with SQL, Python, Power BI, and Excel. I build dashboards, business systems, and automation, from the database to the finished interface.",
+    "location": "Tashkent, Uzbekistan",
+    "email": "alpamisumirbaev@gmail.com",
+    "phone": "+998 (90) 705-76-78",
     "links": [
       {
         "label": "GitHub",
         "url": "https://github.com/alpamisumirbaev"
+      },
+      {
+        "label": "Telegram: @umirbaev_a",
+        "url": "https://t.me/umirbaev_a"
+      },
+      {
+        "label": "LinkedIn: Alpamis Umirbaev",
+        "url": "https://linkedin.com"
       }
     ]
   },
@@ -14,7 +28,9 @@
     {
       "id": "survey-breakdown",
       "title": "Survey Breakdown: опрос специалистов по данным",
+      "titleEn": "Survey Breakdown: Data Professionals Survey",
       "summary": "Отчёт Power BI по опросу: должности, возраст, страны, любимые языки программирования, удовлетворённость зарплатой и балансом работы и жизни. Карточки, шкалы, treemap, столбчатые и кольцевая диаграммы.",
+      "summaryEn": "A Power BI survey report covering job titles, age, countries, favorite programming languages, salary satisfaction, and work-life balance, with KPI cards, gauges, a treemap, and bar and donut charts.",
       "type": "powerbi",
       "file": "projects/survey-breakdown/SURVEY_BREAKDOWN.pbix",
       "tags": [
@@ -22,12 +38,15 @@
         "Survey",
         "Dashboard"
       ],
-      "notes": "Файл .pbix в браузере не открывается: скачайте и откройте в Power BI Desktop."
+      "notes": "Файл .pbix в браузере не открывается: скачайте и откройте в Power BI Desktop.",
+      "notesEn": "The .pbix file cannot be viewed in the browser. Download it and open it in Power BI Desktop."
     },
     {
       "id": "car-sales-analysis",
       "title": "Car Sales Analysis: анализ продаж автомобилей",
+      "titleEn": "Car Sales Analysis",
       "summary": "Отчёт Power BI: цена, компания, цвет, коробка передач, регион дилера и динамика продаж по датам. KPI-карточки, срезы, линейная, столбчатые и кольцевая диаграммы.",
+      "summaryEn": "A Power BI report on vehicle prices, manufacturers, colors, transmission types, dealer regions, and sales over time, with KPI cards, slicers, and line, bar, and donut charts.",
       "type": "powerbi",
       "file": "projects/car-sales-analysis/CAR-SALES-ANALYSIS.pbix",
       "tags": [
@@ -35,12 +54,15 @@
         "Sales",
         "Dashboard"
       ],
-      "notes": "Файл .pbix в браузере не открывается: скачайте и откройте в Power BI Desktop."
+      "notes": "Файл .pbix в браузере не открывается: скачайте и откройте в Power BI Desktop.",
+      "notesEn": "The .pbix file cannot be viewed in the browser. Download it and open it in Power BI Desktop."
     },
     {
       "id": "bike-sales",
       "title": "Bike Sales: анализ покупателей велосипедов",
+      "titleEn": "Bike Sales: Customer Analysis",
       "summary": "Excel-проект: данные около 1000 клиентов, рабочий лист с очисткой, сводная таблица и дашборд.",
+      "summaryEn": "An Excel project with data for around 1,000 customers, a cleaned worksheet, a pivot table, and a dashboard.",
       "type": "excel",
       "file": "projects/bike-sales/Bike_Sales.xlsx",
       "tags": [
@@ -48,12 +70,15 @@
         "Pivot",
         "Dashboard"
       ],
-      "notes": "На сайте видны данные листов (первые 500 строк). Диаграммы Excel здесь не отображаются: полный дашборд в скачанном файле."
+      "notes": "На сайте видны данные листов (первые 500 строк). Диаграммы Excel здесь не отображаются: полный дашборд в скачанном файле.",
+      "notesEn": "The site previews the first 500 rows of each worksheet. Excel charts are not shown here; download the workbook to view the complete dashboard."
     },
     {
       "id": "colab-project-1",
       "title": "Python-проект 1",
+      "titleEn": "Python Project 1",
       "summary": "Блокнот Google Colab. Замените название и описание в редакторе (admin.html).",
+      "summaryEn": "Google Colab notebook. Update the title and description in the admin editor (admin.html).",
       "type": "python",
       "colab": "https://colab.research.google.com/drive/1SEo4SkeujtJmViORxVwiCgYzEGVtwYoo?usp=sharing",
       "tags": [
@@ -64,7 +89,9 @@
     {
       "id": "colab-project-2",
       "title": "Python-проект 2",
+      "titleEn": "Python Project 2",
       "summary": "Блокнот Google Colab. Замените название и описание в редакторе (admin.html).",
+      "summaryEn": "Google Colab notebook. Update the title and description in the admin editor (admin.html).",
       "type": "python",
       "colab": "https://colab.research.google.com/drive/12eYwO3jsdQIlV8hpimHcD5XGRPFc-NaR?usp=sharing",
       "tags": [
@@ -75,7 +102,9 @@
     {
       "id": "colab-project-3",
       "title": "Python-проект 3",
+      "titleEn": "Python Project 3",
       "summary": "Блокнот Google Colab. Замените название и описание в редакторе (admin.html).",
+      "summaryEn": "Google Colab notebook. Update the title and description in the admin editor (admin.html).",
       "type": "python",
       "colab": "https://colab.research.google.com/drive/1PfVa31szV-n8b4F95Zy4yTKdcVRkTaxp?usp=sharing",
       "tags": [
@@ -86,7 +115,9 @@
     {
       "id": "colab-project-4",
       "title": "Python-проект 4",
+      "titleEn": "Python Project 4",
       "summary": "Блокнот Google Colab. Замените название и описание в редакторе (admin.html).",
+      "summaryEn": "Google Colab notebook. Update the title and description in the admin editor (admin.html).",
       "type": "python",
       "colab": "https://colab.research.google.com/drive/1vewbBDjUGYrOlM1Di51-kWjx5TOrRsjC?usp=sharing",
       "tags": [
@@ -97,7 +128,9 @@
     {
       "id": "rfm-dashboard",
       "title": "Дашборд клиентской аналитики",
+      "titleEn": "Customer Analytics Dashboard",
       "summary": "RFM-сегментация, риск ухода (churn), CLV и aging долгов для дилера лекарств. Всё пересчитывается на текущую дату.",
+      "summaryEn": "RFM segmentation, churn risk, customer lifetime value, and receivables aging for a pharmaceutical distributor, recalculated for the current date.",
       "type": "html",
       "file": "projects/rfm-dashboard/index.html",
       "tags": [
@@ -111,7 +144,9 @@
     {
       "id": "dealer-app",
       "title": "Сайт учёта для дилера (Python + SQLite)",
+      "titleEn": "Dealer Operations App (Python + SQLite)",
       "summary": "Веб-приложение: сотрудники вводят продажи, поставки и расходы, данные лежат в SQLite, дашборд встроен. Работает на ноутбуке без установки библиотек.",
+      "summaryEn": "A web app for recording sales, deliveries, and expenses in SQLite, with a built-in dashboard. Runs locally without installing Python libraries.",
       "type": "app",
       "download": "projects/dealer-app/dealer_app.zip",
       "tags": [
@@ -121,12 +156,15 @@
         "Web"
       ],
       "date": "2026-10",
-      "notes": "Приложение запускается на компьютере: установите Python, распакуйте архив и запустите start.bat (или python app.py). На GitHub Pages серверный код не выполняется, поэтому здесь доступна загрузка архива."
+      "notes": "Приложение запускается на компьютере: установите Python, распакуйте архив и запустите start.bat (или python app.py). На GitHub Pages серверный код не выполняется, поэтому здесь доступна загрузка архива.",
+      "notesEn": "Run the app locally: install Python, extract the archive, and run start.bat (or python app.py). GitHub Pages cannot run server-side code, so the archive is provided for download."
     },
     {
       "id": "rfm-python",
       "title": "RFM-отчёт на Python",
+      "titleEn": "RFM Analysis with Python",
       "summary": "Скрипт читает базу SQLite, считает RFM через оконную функцию NTILE и печатает сегменты клиентов.",
+      "summaryEn": "A Python script that reads a SQLite database, calculates RFM scores with the NTILE window function, and prints customer segments.",
       "type": "python",
       "file": "projects/rfm-python/rfm_report.py",
       "tags": [
@@ -139,7 +177,9 @@
     {
       "id": "data-excel",
       "title": "Выгрузка данных в Excel",
+      "titleEn": "Data Export to Excel",
       "summary": "Клиенты и продажи дилера в виде книги Excel: просмотр листов прямо на сайте.",
+      "summaryEn": "An Excel workbook of dealer customers and sales, with worksheet previews available on the site.",
       "type": "excel",
       "file": "projects/data-excel/dealer_data.xlsx",
       "tags": [
