@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Портфолио</title>
+<style>
+:root{--bg:#f4f7f8;--card:#fff;--ink:#13232a;--mute:#586b74;--line:#d8e1e4;--acc:#0b6e7f;--accbg:#e1f1f4;--code:#0f1c22;--codeink:#d6e8ee;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d1619;--card:#152126;--ink:#e3edf0;--mute:#94a9b2;--line:#27373e;--acc:#5cc4d6;--accbg:#17333a;--code:#0a1215}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1080px;margin:auto;padding:20px}
+a{color:var(--acc)}:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.hero{padding:44px 0 26px}.hero h1{font:700 clamp(2rem,6vw,3.2rem)/1.1 Georgia,"Times New Roman",serif;margin:0 0 6px}
+.hero .t{font-size:1.15rem;color:var(--acc);font-weight:600;margin-bottom:12px}.hero p{max-width:640px;color:var(--mute);margin:0 0 16px}
+.links{display:flex;gap:8px;flex-wrap:wrap}.links a,.btn{display:inline-block;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 14px;border-radius:99px;text-decoration:none;font-size:.92rem;cursor:pointer;font-family:inherit}
+.links a:hover,.btn:hover{border-color:var(--acc)}.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}
+@media(prefers-color-scheme:dark){.btn.p{color:#06161a}}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:8px 0 16px}
+.bar input{flex:1;min-width:180px;font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.chip{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:3px 12px;border-radius:99px;font:inherit;font-size:.85rem;cursor:pointer}.chip[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#fff}
+@media(prefers-color-scheme:dark){.chip[aria-pressed=true]{color:#06161a}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit}.card:hover{border-color:var(--acc)}
+.cov{height:130px;background:linear-gradient(135deg,var(--acc),#1d3a6b);display:flex;align-items:flex-end;padding:10px;background-size:cover;background-position:center}
+.badge{background:rgba(0,0,0,.55);color:#fff;border-radius:6px;padding:1px 8px;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+.card .b{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}.card h3{margin:0;font-size:1.05rem}.card p{margin:0;color:var(--mute);font-size:.92rem;flex:1}
+.tags{display:flex;gap:6px;flex-wrap:wrap}.tags span{background:var(--accbg);color:var(--acc);border-radius:6px;padding:0 8px;font-size:.78rem}
+.back{margin:10px 0}.det h2{font:700 1.8rem/1.2 Georgia,serif;margin:6px 0}.det .acts{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.view{border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden;margin:14px 0}
+iframe{width:100%;border:0;display:block;height:78vh;background:#fff}iframe.pb{aspect-ratio:16/10;height:auto}
+pre{margin:0;background:var(--code);color:var(--codeink);padding:14px;overflow:auto;font:13px/1.55 ui-monospace,Menlo,Consolas,monospace;max-height:75vh}
+.k{color:#7cc7ff}.s{color:#a5d6a7}.c{color:#8fa3ad;font-style:italic}.n{color:#ffcc80}
+.xt{overflow:auto;max-height:72vh}table{border-collapse:collapse;font-size:.88rem;width:100%}th,td{border-bottom:1px solid var(--line);padding:5px 10px;text-align:left;white-space:nowrap}th{position:sticky;top:0;background:var(--accbg)}
+.tabs{display:flex;gap:6px;padding:8px;border-bottom:1px solid var(--line);overflow-x:auto}
+.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;padding:10px}.gal img{width:100%;border-radius:8px;border:1px solid var(--line)}
+.note{padding:14px;color:var(--mute)}footer{color:var(--mute);font-size:.85rem;padding:30px 0}
+</style></head><body><div class="wrap">
+<div id="app"></div><footer id="foot"></footer></div>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const safe=u=>/^(https?:|mailto:|[\w./%-]+$)/i.test(u||'')?u:'#';
+const ext=u=>((u||'').split('?')[0].split('.').pop()||'').toLowerCase();
+const driveId=s=>{if(!s)return'';const m=String(s).match(/\/(?:d|folders)\/([\w-]{15,})|[?&]id=([\w-]{15,})/);return m?(m[1]||m[2]):(/^[\w-]{15,}$/.test(s)?s:'')};
+const TYPES={html:'Демо',app:'Приложение',python:'Python',excel:'Excel',powerbi:'Power BI',drive:'Google Drive',link:'Ссылка'};
+function typeOf(p){if(p.type)return p.type;const e=ext(p.file||p.download);return{html:'html',htm:'html',py:'python',ipynb:'python',xlsx:'excel',xls:'excel',csv:'excel',pbix:'powerbi'}[e]||(p.embed?'powerbi':p.drive||p.driveFolder?'drive':'link')}
+let DB={profile:{},projects:[]},tag='',q='';
+async function boot(){
+ try{const r=await fetch('portfolio.json',{cache:'no-cache'});if(!r.ok)throw 0;DB=await r.json()}catch(e){$('app').innerHTML='<p class="note">Не удалось загрузить portfolio.json. Если вы открыли файл двойным кликом, запустите локальный сервер (python -m http.server) или опубликуйте сайт на GitHub Pages.</p>';return}
+ document.title=(DB.profile.name||'Портфолио');route();
+}
+function route(){const id=decodeURIComponent(location.hash.replace(/^#\/?/,''));const p=DB.projects.find(x=>x.id===id);p?detail(p):home();scrollTo(0,0)}
+addEventListener('hashchange',route);
+function home(){
+ const P=DB.profile,all=DB.projects.filter(p=>!p.hidden),tags=[...new Set(all.flatMap(p=>p.tags||[]))].sort();
+ const list=all.filter(p=>(!tag||(p.tags||[]).includes(tag))&&(p.title+' '+p.summary+' '+(p.tags||[]).join(' ')).toLowerCase().includes(q));
+ $('app').innerHTML=`<div class="hero"><h1>${esc(P.name)}</h1><div class="t">${esc(P.title)}</div><p>${esc(P.about)}</p><div class="links">${(P.links||[]).map(l=>`<a href="${esc(safe(l.url))}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join('')}</div></div>
+ <div class="bar"><input id="q" placeholder="Поиск по проектам" value="${esc(q)}" aria-label="Поиск"><span>${tags.map(t=>`<button class="chip" aria-pressed="${t===tag}" data-tag="${esc(t)}">${esc(t)}</button>`).join(' ')}</span></div>
+ <div class="grid">${list.map(card).join('')||'<p class="note">Ничего не найдено.</p>'}</div>`;
+ $('foot').textContent=`© ${new Date().getFullYear()} ${P.name||''}`;
+ $('q').oninput=e=>{q=e.target.value.toLowerCase();const pos=e.target.selectionStart;home();$('q').focus();$('q').setSelectionRange(pos,pos)};
+ document.querySelectorAll('[data-tag]').forEach(b=>b.onclick=()=>{tag=tag===b.dataset.tag?'':b.dataset.tag;home()});
+}
+function card(p){const t=typeOf(p),img=(p.cover||(p.images||[])[0]);
+ return`<a class="card" href="#/${encodeURIComponent(p.id)}"><div class="cov" ${img?`style="background-image:url('${esc(safe(img))}')"`:''}><span class="badge">${esc(TYPES[t]||t)}</span></div><div class="b"><h3>${esc(p.title)}</h3><p>${esc(p.summary)}</p><div class="tags">${(p.tags||[]).map(x=>`<span>${esc(x)}</span>`).join('')}</div></div></a>`}
+function detail(p){
+ const t=typeOf(p),did=driveId(p.drive),fid=driveId(p.driveFolder),acts=[];
+ if(p.file&&t==='html')acts.push(`<a class="btn p" href="${esc(safe(p.file))}" target="_blank" rel="noopener">Открыть в новой вкладке</a>`);
+ if(p.demo)acts.push(`<a class="btn p" href="${esc(safe(p.demo))}" target="_blank" rel="noopener">Живое демо</a>`);
+ if(p.repo)acts.push(`<a class="btn" href="${esc(safe(p.repo))}" target="_blank" rel="noopener">Код на GitHub</a>`);
+ if(p.file&&t!=='html')acts.push(`<a class="btn" href="${esc(safe(p.file))}" download>Скачать файл</a>`);
+ if(p.download)acts.push(`<a class="btn p" href="${esc(safe(p.download))}" download>Скачать</a>`);
+ if(did)acts.push(`<a class="btn" href="https://drive.google.com/uc?export=download&id=${did}" target="_blank" rel="noopener">Скачать с Google Drive</a>`);
+ if(fid)acts.push(`<a class="btn" href="https://drive.google.com/drive/folders/${fid}" target="_blank" rel="noopener">Папка на Google Drive</a>`);
+ $('app').innerHTML=`<div class="back"><a href="#/">← Все проекты</a></div><div class="det"><span class="badge" style="background:var(--acc)">${esc(TYPES[t]||t)}</span><h2>${esc(p.title)}</h2><p>${esc(p.summary)}</p><div class="tags">${(p.tags||[]).map(x=>`<span>${esc(x)}</span>`).join('')}</div><div class="acts">${acts.join('')}</div>${p.notes?`<p class="note" style="padding:0">${esc(p.notes)}</p>`:''}<div id="v"></div></div>`;
+ view(p,t,did,fid);
+}
+const box=h=>$('v').innerHTML=`<div class="view">${h}</div>`;
+const frame=(src,cls='')=>box(`<iframe class="${cls}" src="${esc(src)}" loading="lazy" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-downloads allow-modals"></iframe>`);
+const gallery=p=>(p.images||[]).length?`<div class="gal">${p.images.map(i=>`<img loading="lazy" src="${esc(safe(i))}" alt="">`).join('')}</div>`:'';
+async function view(p,t,did,fid){
+ if(t==='html'&&p.file)return frame(safe(p.file));
+ if(t==='powerbi'&&/^https:\/\//.test(p.embed||''))return frame(p.embed,'pb');
+ if(t==='python'&&p.file)return code(p);
+ if(t==='excel'&&p.file)return sheet(p);
+ if(did)return frame(`https://drive.google.com/file/d/${did}/preview`);
+ if(fid)return frame(`https://drive.google.com/embeddedfolderview?id=${fid}#grid`);
+ const g=gallery(p);if(g)box(g)
+}
+function hl(src){const re=/("""[\s\S]*?"""|'''[\s\S]*?'''|'[^'\n]*'|"[^"\n]*")|(#[^\n]*)|\b(def|class|import|from|as|return|if|elif|else|for|while|in|not|and|or|with|try|except|finally|raise|lambda|None|True|False|yield|pass|break|continue|is)\b|\b(\d+\.?\d*)\b/g;
+ return esc(src).replace(/&quot;/g,'"').replace(re,(m,s,c,k,n)=>s?`<span class="s">${s}</span>`:c?`<span class="c">${c}</span>`:k?`<span class="k">${k}</span>`:`<span class="n">${n}</span>`)}
+async function code(p){
+ let txt;try{const r=await fetch(p.file);if(!r.ok)throw 0;txt=await r.text()}catch(e){return box('<p class="note">Не удалось загрузить файл.</p>')}
+ if(ext(p.file)==='ipynb'){try{txt=JSON.parse(txt).cells.map(c=>c.cell_type==='markdown'?'# '+[].concat(c.source).join('').replace(/\n/g,'\n# '):[].concat(c.source).join('')).join('\n\n')}catch(e){}}
+ box(`<div class="tabs"><button class="chip" id="cp">Копировать код</button></div><pre><code>${hl(txt)}</code></pre>`);
+ $('cp').onclick=()=>navigator.clipboard.writeText(txt).then(()=>$('cp').textContent='Скопировано')
+}
+function loadX(){return window.XLSX?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+async function sheet(p){
+ box('<p class="note">Загрузка таблицы…</p>');
+ try{await loadX();const r=await fetch(p.file);if(!r.ok)throw 0;const wb=XLSX.read(await r.arrayBuffer(),{type:'array',cellDates:true});
+  const show=n=>{const rows=XLSX.utils.sheet_to_json(wb.Sheets[n],{header:1,raw:false,defval:''}).slice(0,500);
+   box(`<div class="tabs">${wb.SheetNames.map(s=>`<button class="chip" aria-pressed="${s===n}" data-s="${esc(s)}">${esc(s)}</button>`).join('')}</div><div class="xt"><table><thead><tr>${(rows[0]||[]).map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.slice(1).map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="note">Показаны первые 500 строк листа.</p>`);
+   document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>show(b.dataset.s))};
+  show(wb.SheetNames[0])}catch(e){box('<p class="note">Не удалось открыть таблицу. Проверьте путь к файлу в portfolio.json.</p>')}
+}
+boot();
+</script></body></html>

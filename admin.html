@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Редактор портфолио</title>
+<style>
+:root{--bg:#f4f7f8;--card:#fff;--ink:#13232a;--mute:#586b74;--line:#d8e1e4;--acc:#0b6e7f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d1619;--card:#152126;--ink:#e3edf0;--mute:#94a9b2;--line:#27373e;--acc:#5cc4d6}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:860px;margin:auto;padding:18px}h1{font:700 1.5rem Georgia,serif;margin:0 0 6px}.mute{color:var(--mute);font-size:.88rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin:12px 0}
+label{display:flex;flex-direction:column;font-size:.82rem;color:var(--mute);gap:2px;margin:8px 0}
+input,select,textarea,button{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px}textarea{min-height:60px}
+button{cursor:pointer}button.p{background:var(--acc);border-color:var(--acc);color:#fff}@media(prefers-color-scheme:dark){button.p{color:#06161a}}
+details{border:1px solid var(--line);border-radius:8px;margin:8px 0;background:var(--card)}summary{padding:10px 12px;cursor:pointer;font-weight:600}details>div{padding:0 12px 12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0 12px}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+</style></head><body><div class="wrap">
+<h1>Редактор портфолио</h1>
+<p class="mute">Правьте профиль и проекты, затем нажмите «Скачать portfolio.json» и загрузите файл в свой репозиторий GitHub вместо старого. Редактор работает только у вас в браузере и ничего никуда не отправляет.</p>
+<div class="row"><label>Открыть существующий portfolio.json <input type="file" id="file" accept=".json"></label></div>
+<div class="card"><h2 style="margin:0">Профиль</h2><div id="prof"></div></div>
+<div class="card"><h2 style="margin:0">Проекты</h2><div id="list"></div><div class="row"><button class="p" id="add">+ Добавить проект</button></div></div>
+<div class="row"><button class="p" id="dl">Скачать portfolio.json</button><span class="mute" id="msg"></span></div>
+</div>
+<script>
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let DB={profile:{name:'',title:'',about:'',links:[]},projects:[]};
+const TYPES=['','html','app','python','excel','powerbi','drive','link'];
+const F=[['id','ID (латиницей, без пробелов)'],['title','Название'],['summary','Описание','area'],['type','Тип (пусто = определить по файлу)','sel'],['file','Файл в репозитории (путь)'],['drive','Google Drive: ссылка или ID файла'],['driveFolder','Google Drive: ссылка на папку'],['embed','Power BI: ссылка Publish to web (https)'],['demo','Ссылка на живое демо'],['repo','Ссылка на GitHub'],['download','Файл для скачивания (путь или ссылка)'],['cover','Обложка (путь к картинке)'],['images','Картинки (по одной в строке)','list'],['tags','Теги (через запятую)','tags'],['date','Дата (например 2026-10)'],['notes','Заметка','area']];
+const val=(p,k,t)=>t==='list'?(p[k]||[]).join('\n'):t==='tags'?(p[k]||[]).join(', '):(p[k]??'');
+function render(){
+ const P=DB.profile;
+ $('prof').innerHTML=['name:Имя','title:Должность','about:О себе'].map(s=>{const[k,l]=s.split(':');return`<label>${l}${k==='about'?`<textarea data-p="${k}">${esc(P[k])}</textarea>`:`<input data-p="${k}" value="${esc(P[k])}">`}</label>`}).join('')+`<label>Ссылки (по одной в строке: Название | адрес)<textarea data-p="links" style="min-height:90px">${esc((P.links||[]).map(l=>l.label+' | '+l.url).join('\n'))}</textarea></label>`;
+ $('list').innerHTML=DB.projects.map((p,i)=>`<details><summary>${esc(p.title||'Новый проект')} ${p.hidden?'(скрыт)':''}</summary><div><div class="g2">${F.map(([k,l,t])=>`<label>${l}${t==='area'||t==='list'?`<textarea data-i="${i}" data-k="${k}" data-t="${t}">${esc(val(p,k,t))}</textarea>`:t==='sel'?`<select data-i="${i}" data-k="${k}">${TYPES.map(x=>`<option ${x===(p[k]||'')?'selected':''}>${x}</option>`).join('')}</select>`:`<input data-i="${i}" data-k="${k}" data-t="${t||''}" value="${esc(val(p,k,t))}">`}</label>`).join('')}</div>
+ <label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" data-i="${i}" data-k="hidden" ${p.hidden?'checked':''}> Скрыть на сайте (не удаляя)</label>
+ <div class="row"><button data-up="${i}">↑ Выше</button><button data-down="${i}">↓ Ниже</button><button data-del="${i}">Удалить проект</button></div></div></details>`).join('')||'<p class="mute">Проектов пока нет.</p>';
+}
+document.addEventListener('input',e=>{const t=e.target;
+ if(t.dataset.p){const k=t.dataset.p;DB.profile[k]=k==='links'?t.value.split('\n').filter(x=>x.includes('|')).map(x=>{const[a,...b]=x.split('|');return{label:a.trim(),url:b.join('|').trim()}}):t.value;return}
+ if(t.dataset.k){const p=DB.projects[+t.dataset.i],k=t.dataset.k,ty=t.dataset.t;let v=t.type==='checkbox'?t.checked:t.value;
+  if(ty==='list')v=v.split('\n').map(x=>x.trim()).filter(Boolean);if(ty==='tags')v=v.split(',').map(x=>x.trim()).filter(Boolean);
+  if(v===''||v===false||(Array.isArray(v)&&!v.length))delete p[k];else p[k]=v}});
+document.addEventListener('click',e=>{const t=e.target,d=t.dataset,L=DB.projects;
+ if(d.del!==undefined&&confirm('Удалить проект?')){L.splice(+d.del,1);render()}
+ if(d.up!==undefined&&+d.up>0){const i=+d.up;[L[i-1],L[i]]=[L[i],L[i-1]];render()}
+ if(d.down!==undefined&&+d.down<L.length-1){const i=+d.down;[L[i+1],L[i]]=[L[i],L[i+1]];render()}});
+$('add').onclick=()=>{DB.projects.unshift({id:'project-'+Date.now().toString(36),title:'Новый проект',summary:''});render();document.querySelector('details').open=true};
+$('file').onchange=e=>e.target.files[0].text().then(t=>{try{DB=JSON.parse(t);DB.projects=DB.projects||[];render();$('msg').textContent='Файл загружен'}catch(x){$('msg').textContent='Файл повреждён'}});
+$('dl').onclick=()=>{const ids=DB.projects.map(p=>p.id);if(ids.some((x,i)=>!x||/[^\w-]/.test(x)||ids.indexOf(x)!==i)){$('msg').textContent='ID у каждого проекта должен быть уникальным: латинские буквы, цифры, - и _';return}
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(DB,null,2)],{type:'application/json'}));a.download='portfolio.json';a.click();$('msg').textContent='Готово: загрузите файл в репозиторий'};
+fetch('portfolio.json').then(r=>r.json()).then(j=>{DB=j;render()}).catch(render);
+</script></body></html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mijozlar tahlili — дашборд</title>
+<style>
+:root{--bg:#f3f6f7;--card:#fff;--ink:#13232a;--mute:#5a6d76;--line:#d8e1e4;--acc:#0b6e7f;--accbg:#e1f1f4;--bad:#b3261e;--c-VIP:#0b6e7f;--c-Loyal:#2f7d4f;--c-New:#3b6fb6;--c-Regular:#7d8a91;--c-AtRisk:#c2691f;--c-Lost:#b3261e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0d1619;--card:#152126;--ink:#e3edf0;--mute:#94a9b2;--line:#27373e;--acc:#5cc4d6;--accbg:#17333a;--bad:#ff8a80}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1180px;margin:auto;padding:18px}
+header{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+h1{font:700 1.6rem/1.2 Georgia,serif;margin:0}h2{font:700 1.05rem/1.3 Georgia,serif;margin:0 0 10px}
+.mute{color:var(--mute);font-size:.88rem}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input,select,button{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+button{cursor:pointer}button.p{background:var(--acc);border-color:var(--acc);color:#fff}
+@media(prefers-color-scheme:dark){button.p{color:#06161a}}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+.kpi b{display:block;font-size:1.45rem;line-height:1.2}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-bottom:14px}
+.bar{display:grid;grid-template-columns:130px 1fr 74px;gap:8px;align-items:center;margin:5px 0;font-size:.9rem}
+.bar .n{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+.tr{background:var(--accbg);border-radius:4px;height:14px}.tr i{display:block;height:100%;border-radius:4px}
+.seg{cursor:pointer}.seg:hover .n{text-decoration:underline}
+.sc{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child,.l{text-align:left}
+th{color:var(--mute);font-weight:600;cursor:pointer;user-select:none}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;color:#fff;font-size:.78rem}
+.hm td:not(:first-child){border-left:1px solid var(--line)}
+tfoot td{font-weight:700}
+</style></head><body><div class="wrap">
+<header><div><h1>Mijozlar tahlili</h1><div class="mute" id="stamp"></div></div>
+<div class="ctl"><label class="mute">Дата отсчёта <input type="date" id="dt"></label><button id="today">Сегодня</button>
+<label class="mute">Свои данные: customers <input type="file" id="fc" accept=".csv" style="width:150px"></label>
+<label class="mute">transactions <input type="file" id="ft" accept=".csv" style="width:150px"></label>
+<button id="reset">Сбросить</button></div></header>
+<div class="kpis" id="kpis"></div>
+<div class="grid">
+<div class="card"><h2>RFM-сегменты <span class="mute">(клик — фильтр таблицы)</span></h2><div id="segs"></div></div>
+<div class="card"><h2>Риск ухода (churn), топ-10</h2><div id="churn"></div></div>
+<div class="card"><h2>CLV, топ-10 (млн сум)</h2><div id="clv"></div></div>
+<div class="card"><h2>Qarz aging по сегментам (млн сум)</h2><div class="sc"><table class="hm" id="aging"></table></div></div>
+</div>
+<div class="card"><div class="ctl" style="justify-content:space-between;margin-bottom:8px"><h2 style="margin:0">Все клиенты</h2>
+<div class="ctl"><input id="q" placeholder="Поиск по названию"><select id="sf"></select></div></div>
+<div class="sc"><table id="tbl"></table></div></div>
+<p class="mute">Все показатели пересчитываются в браузере по дате отсчёта (по умолчанию — сегодня) по тем же правилам, что в SQL-уроке: NTILE(5), churn = 100·recency/(интервал·3), CLV = средний чек × число покупок, aging по дате транзакции.</p>
+</div>
+<script id="lib">
+const DAY=864e5,SEGS=['VIP','Loyal','New','Regular','At Risk','Lost'],BK=['0-30 kun','31-60 kun','61-90 kun','90+ kun'];
+const day=s=>{const[a,b,c]=s.split('-').map(Number);return Date.UTC(a,b-1,c)/DAY};
+const ntile=(i,n)=>{const s=Math.floor(n/5),r=n%5;if(!s)return i+1;const k=r*(s+1);return i<k?Math.floor(i/(s+1))+1:r+Math.floor((i-k)/s)+1};
+const segOf=(R,F)=>R>=4&&F>=4?'VIP':R>=3&&F>=3?'Loyal':R>=4&&F<=2?'New':R<=2&&F>=4?'At Risk':R<=2&&F<=2?'Lost':'Regular';
+function calc(C,T,today){
+ const by={};T.forEach(t=>(by[t[0]]=by[t[0]]||[]).push(t));
+ const rows=C.filter(c=>by[c[0]]).map(c=>{const ts=by[c[0]],ds=ts.map(t=>day(t[1])),n=ts.length,sum=ts.reduce((s,t)=>s+t[2],0),last=Math.max(...ds),first=Math.min(...ds);
+  return{id:c[0],name:c[1],type:c[2],region:c[3],rec:Math.floor(today-last),n,sum,iv:n>1?(last-first)/(n-1):null,ts}});
+ const g=rows.filter(r=>r.iv!=null),ga=g.reduce((s,r)=>s+r.iv,0)/(g.length||1);
+ let ord=[...rows].sort((a,b)=>a.id-b.id);
+ // равные значения упорядочены цепочкой сортировок M→F→R: так их раскладывает SQLite в уроке
+ [['sum',1,'M'],['n',1,'F'],['rec',-1,'R']].forEach(([k,d,o])=>{ord=[...ord].sort((a,b)=>d*(a[k]-b[k]));ord.forEach((r,i)=>r[o]=ntile(i,rows.length))});
+ const lines=[];
+ rows.forEach(r=>{r.seg=segOf(r.R,r.F);const iv=r.iv??ga;r.churn=Math.min(100,Math.round(1000*r.rec/(iv*3))/10);r.clv=r.sum/r.n*r.n;r.debt=0;
+  r.ts.forEach(t=>{const d=t[2]-t[3];if(d>0){const a=Math.floor(today-day(t[1]));r.debt+=d;lines.push({seg:r.seg,d,b:a<=30?0:a<=60?1:a<=90?2:3})}})});
+ return{rows,lines};
+}
+</script>
+<script>
+const EMB={"C":[[1,"Shifo Plus Med Service","Dorixona","Namangan"],[2,"Dilmedpharm","Dorixona","Toshkent"],[3,"Yusuf Medicine Pharmacy","Dorixona","Samarqand"],[4,"Diyor Medical Centre","Shifoxona","Samarqand"],[5,"Kardio-Farm","Dorixona","Namangan"],[6,"Sakpharma","Dorixona","Toshkent"],[7,"World Pharma","Dorixona","Farg'ona"],[8,"Platinum Optima Service","Dorixona","Toshkent"],[9,"Sfs Farm","Dorixona","Samarqand"],[10,"Yudida","Dorixona","Buxoro"],[11,"Mashxura-I","Dorixona","Toshkent"],[12,"Omina Med-Pharm","Dorixona","Samarqand"],[13,"Saavii","Dorixona","Namangan"],[14,"Bolalar Milliy Tibbiyot Markazi","Shifoxona","Farg'ona"],[15,"Nur Shifo","Dorixona","Farg'ona"],[16,"Tongi Osiyo Farm","Dorixona","Andijon"],[17,"Avitsenna Pharm","Dorixona","Qashqadaryo"],[18,"Salomatlik Servis","Shifoxona","Namangan"],[19,"Ipak Yoli Dorixona","Dorixona","Andijon"],[20,"Zamin Farm Trade","Dorixona","Samarqand"],[21,"Rohat Shifo Markazi","Shifoxona","Qashqadaryo"],[22,"Oltin Tomir Pharm","Dorixona","Toshkent"],[23,"Vita Med Group","Dorixona","Farg'ona"],[24,"Barkamol Avlod Shifoxonasi","Shifoxona","Andijon"],[25,"Tabobat Plus","Dorixona","Buxoro"],[26,"Ezgu Niyat Farm","Dorixona","Qashqadaryo"],[27,"Chashma Med Pharm","Dorixona","Namangan"],[28,"Osiyo Salomatlik","Dorixona","Buxoro"],[29,"Hayot Nuri Shifoxona","Shifoxona","Farg'ona"],[30,"Dorivo Pharm","Dorixona","Buxoro"]],"T":[[1,"2026-09-12",35727000,35727000],[1,"2026-07-25",22509000,22509000],[1,"2026-06-22",13205000,13205000],[1,"2026-05-07",29446000,29446000],[1,"2026-04-15",29874000,13279000],[1,"2026-02-19",25092000,25092000],[1,"2026-02-05",22792000,22792000],[1,"2026-01-24",37613000,37613000],[1,"2025-12-03",15028000,15028000],[1,"2025-11-09",32586000,18745000],[1,"2025-09-11",33761000,33761000],[1,"2025-08-14",10118000,10118000],[1,"2025-07-30",26150000,26150000],[1,"2025-07-06",14804000,14804000],[2,"2026-09-18",20781000,20781000],[2,"2026-08-30",39921000,39921000],[2,"2026-08-04",10909000,837000],[2,"2026-07-17",28078000,28078000],[2,"2026-06-22",21509000,5746000],[2,"2026-04-26",39876000,39876000],[2,"2026-03-12",39075000,39075000],[2,"2026-01-27",8367000,8367000],[2,"2026-01-01",29815000,29815000],[2,"2025-11-05",16538000,16538000],[2,"2025-09-19",11570000,11570000],[2,"2025-08-13",22519000,22519000],[2,"2025-06-27",36027000,36027000],[3,"2026-09-27",13170000,13170000],[3,"2026-08-16",37518000,37518000],[3,"2026-07-31",27166000,27166000],[3,"2026-06-11",11580000,11580000],[3,"2026-05-13",39530000,39530000],[3,"2026-03-24",15662000,15662000],[3,"2026-02-10",26155000,13400000],[3,"2025-12-24",34113000,34113000],[3,"2025-12-02",25047000,25047000],[3,"2025-11-13",29112000,29112000],[3,"2025-10-11",13284000,13284000],[3,"2025-08-14",27411000,27411000],[4,"2026-09-26",15190000,15190000],[4,"2026-08-02",26826000,26826000],[4,"2026-07-04",15047000,6647000],[4,"2026-05-30",15326000,15326000],[4,"2026-04-08",35508000,5916000],[4,"2026-02-16",29407000,29407000],[4,"2026-01-14",12234000,12234000],[4,"2025-12-07",26273000,26273000],[4,"2025-10-25",33108000,33108000],[4,"2025-09-17",14093000,4252000],[4,"2025-08-31",21555000,21555000],[4,"2025-08-06",31330000,31330000],[5,"2026-09-29",13872000,13872000],[5,"2026-09-16",35984000,20353000],[5,"2026-08-12",35391000,16156000],[5,"2026-06-17",25299000,1652000],[5,"2026-05-17",32114000,32114000],[5,"2026-05-01",21005000,21005000],[5,"2026-04-06",35669000,35669000],[5,"2026-03-15",13268000,3626000],[5,"2026-02-21",37649000,37649000],[5,"2026-01-08",17128000,17128000],[5,"2025-12-01",31376000,31376000],[5,"2025-11-13",29180000,29180000],[5,"2025-10-07",14077000,14077000],[6,"2026-08-26",6763000,2257000],[6,"2026-06-30",14033000,14033000],[6,"2026-05-17",3683000,3683000],[6,"2026-05-04",13216000,629000],[6,"2026-03-08",13342000,13342000],[7,"2026-09-17",9783000,9783000],[7,"2026-08-01",6129000,6129000],[7,"2026-06-14",6770000,6770000],[7,"2026-06-02",4571000,4571000],[7,"2026-04-14",8487000,8487000],[7,"2026-03-30",14229000,6187000],[7,"2026-02-22",9756000,3672000],[7,"2026-01-01",9071000,2216000],[7,"2025-11-15",3825000,3825000],[8,"2026-09-22",9347000,9347000],[8,"2026-08-15",9655000,9655000],[8,"2026-07-02",4243000,4243000],[8,"2026-05-08",6174000,6174000],[8,"2026-04-09",11909000,11909000],[8,"2026-02-19",6381000,6381000],[8,"2025-12-30",7115000,7115000],[9,"2026-08-31",12952000,3024000],[9,"2026-07-21",4570000,4570000],[9,"2026-06-25",4939000,4939000],[9,"2026-06-12",11468000,11468000],[9,"2026-05-28",4342000,4342000],[9,"2026-04-08",11292000,285000],[9,"2026-03-02",7431000,7431000],[10,"2026-09-24",11185000,11185000],[10,"2026-09-12",7244000,7244000],[10,"2026-08-14",13497000,13497000],[10,"2026-07-12",11994000,11994000],[10,"2026-05-13",5841000,5841000],[10,"2026-05-01",12599000,12599000],[10,"2026-03-30",7948000,7948000],[10,"2026-03-07",14094000,14094000],[11,"2026-08-21",7591000,2501000],[11,"2026-06-25",5395000,5395000],[11,"2026-05-31",7196000,7196000],[11,"2026-05-04",13456000,13456000],[11,"2026-04-14",10920000,10920000],[11,"2026-02-13",6343000,3434000],[11,"2025-12-21",7214000,7214000],[11,"2025-12-05",11154000,11154000],[12,"2026-10-01",4301000,4301000],[12,"2026-09-14",11743000,11743000],[12,"2026-08-19",10275000,10275000],[12,"2026-07-29",7622000,7622000],[12,"2026-06-12",6057000,6057000],[12,"2026-05-17",3020000,3020000],[12,"2026-05-05",9461000,9461000],[13,"2026-08-17",5744000,5744000],[13,"2026-07-11",4116000,4116000],[13,"2026-06-27",1623000,1623000],[14,"2026-07-09",4486000,4486000],[14,"2026-06-03",1959000,1959000],[14,"2026-05-04",2896000,2896000],[14,"2026-03-30",1870000,1870000],[15,"2026-07-24",3149000,3149000],[15,"2026-07-14",4274000,4274000],[15,"2026-06-15",3211000,3211000],[15,"2026-05-18",3366000,3366000],[15,"2026-04-25",4980000,296000],[16,"2026-09-21",2552000,2552000],[16,"2026-07-25",1737000,1196000],[16,"2026-06-30",4056000,4056000],[16,"2026-05-08",3277000,3277000],[17,"2026-07-05",2998000,1443000],[17,"2026-06-01",5463000,5463000],[17,"2026-04-21",5427000,5427000],[18,"2026-09-10",3323000,3323000],[18,"2026-07-18",5587000,521000],[18,"2026-06-05",3323000,3323000],[19,"2026-08-07",3134000,3134000],[19,"2026-06-19",3230000,1948000],[19,"2026-04-24",3250000,3250000],[19,"2026-03-13",5199000,5199000],[20,"2026-09-12",1186000,237000],[20,"2026-08-18",1179000,1179000],[21,"2026-09-28",877000,877000],[22,"2026-09-10",1035000,1035000],[23,"2026-09-15",1539000,1539000],[23,"2026-08-07",1550000,1550000],[24,"2026-04-06",8028000,8028000],[24,"2026-03-26",9627000,9627000],[24,"2026-01-27",7980000,7980000],[24,"2025-12-12",6826000,1048000],[24,"2025-11-08",5487000,1291000],[24,"2025-09-29",7433000,7433000],[24,"2025-09-19",3320000,3320000],[24,"2025-08-18",3021000,3021000],[24,"2025-07-20",2216000,2216000],[25,"2026-04-11",4081000,4081000],[25,"2026-03-31",5638000,5638000],[25,"2026-03-16",9037000,6017000],[25,"2026-01-24",5373000,5373000],[25,"2025-12-18",5762000,5762000],[25,"2025-11-30",2417000,2417000],[25,"2025-10-22",3794000,2542000],[25,"2025-10-01",2322000,402000],[25,"2025-09-18",8714000,8714000],[26,"2026-06-18",5720000,1477000],[26,"2026-05-09",6847000,6847000],[26,"2026-03-18",7747000,7747000],[26,"2026-03-01",3310000,3310000],[26,"2026-01-14",6629000,6629000],[26,"2025-12-22",6606000,6606000],[27,"2026-01-24",637000,637000],[27,"2025-11-30",1712000,836000],[28,"2026-04-05",1973000,1973000],[28,"2026-02-04",890000,890000],[29,"2026-04-18",1401000,412000],[29,"2026-03-07",1133000,1133000],[30,"2026-01-08",560000,205000],[30,"2025-11-14",1406000,1406000]]};
+const $=id=>document.getElementById(id);
+const M=v=>(v/1e6).toLocaleString('ru-RU',{maximumFractionDigits:1});
+const CL=s=>'var(--c-'+s.replace(' ','')+')';
+const tag=s=>`<span class="tag" style="background:${CL(s)}">${s}</span>`;
+let data=EMB,realDay='',filt='',sortK='sum',sortD=-1,res;
+try{const s=localStorage.getItem('mt_data');if(s)data=JSON.parse(s)}catch(e){}
+const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function bars(el,items,fmt,colorFn){const mx=Math.max(...items.map(i=>i[1]),1);$(el).innerHTML=items.map(i=>`<div class="bar"><span class="n" title="${i[0]}">${i[0]}</span><div class="tr"><i style="width:${i[1]/mx*100}%;background:${colorFn(i)}"></i></div><span class="v">${fmt(i[1])}</span></div>`).join('')}
+function render(){
+ const today=day($('dt').value),{rows,lines}=calc(data.C,data.T,today);res=rows;
+ const lastTx=Math.max(...data.T.map(t=>day(t[1]))),debt=lines.reduce((s,l)=>s+l.d,0),d90=lines.filter(l=>l.b==3).reduce((s,l)=>s+l.d,0);
+ $('stamp').textContent=`Данные на ${new Date(today*DAY).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})}. Последняя транзакция в базе: ${new Date(lastTx*DAY).toLocaleDateString('ru-RU',{day:'numeric',month:'long',timeZone:'UTC'})} (${Math.floor(today-lastTx)} дн. назад)`;
+ const kp=[['Клиентов',rows.length],['Выручка, млн',M(rows.reduce((s,r)=>s+r.sum,0))],['Долг, млн',M(debt)],['Долг 90+ дней, млн',M(d90)],['Средний churn',(rows.reduce((s,r)=>s+r.churn,0)/rows.length).toFixed(1)+'%'],['В зоне риска (≥70%)',rows.filter(r=>r.churn>=70).length]];
+ $('kpis').innerHTML=kp.map(k=>`<div class="card kpi"><span class="mute">${k[0]}</span><b>${k[1]}</b></div>`).join('');
+ const sc=SEGS.map(s=>[s,rows.filter(r=>r.seg===s).length]);
+ bars('segs',sc,v=>v,i=>CL(i[0]));document.querySelectorAll('#segs .bar').forEach((b,i)=>{b.classList.add('seg');b.onclick=()=>{$('sf').value=SEGS[i];filt=SEGS[i];table()}});
+ bars('churn',[...rows].sort((a,b)=>b.churn-a.churn).slice(0,10).map(r=>[r.name,r.churn]),v=>v.toFixed(1)+'%',i=>i[1]>=70?'var(--bad)':i[1]>=40?'var(--c-AtRisk)':'var(--acc)');
+ bars('clv',[...rows].sort((a,b)=>b.clv-a.clv).slice(0,10).map(r=>[r.name,r.clv]),M,()=>'var(--acc)');
+ const cell={};lines.forEach(l=>{const k=l.seg+l.b;cell[k]=(cell[k]||0)+l.d});const mxc=Math.max(...Object.values(cell),1);
+ const colT=BK.map((_,b)=>SEGS.reduce((s,g)=>s+(cell[g+b]||0),0));
+ $('aging').innerHTML=`<thead><tr><th>Сегмент</th>${BK.map(b=>`<th>${b}</th>`).join('')}<th>Итого</th></tr></thead><tbody>`+SEGS.map(s=>{const t=BK.reduce((a,_,b)=>a+(cell[s+b]||0),0);return`<tr><td>${tag(s)}</td>${BK.map((_,b)=>{const v=cell[s+b]||0;return`<td style="background:rgba(194,105,31,${(v/mxc*.55).toFixed(2)})">${v?M(v):'–'}</td>`}).join('')}<td><b>${M(t)}</b></td></tr>`}).join('')+`</tbody><tfoot><tr><td>Итого</td>${colT.map(v=>`<td>${M(v)}</td>`).join('')}<td>${M(debt)}</td></tr></tfoot>`;
+ table();
+}
+function table(){
+ const q=$('q').value.toLowerCase(),h=[['name','Клиент'],['seg','Сегмент'],['rec','Дней с покупки'],['n','Покупок'],['sum','Оборот, млн'],['R','R'],['F','F'],['M','M'],['churn','Churn %'],['debt','Долг, млн']];
+ const rs=res.filter(r=>(!filt||r.seg===filt)&&r.name.toLowerCase().includes(q)).sort((a,b)=>sortD*((typeof a[sortK]==='string')?a[sortK].localeCompare(b[sortK]):a[sortK]-b[sortK]));
+ $('tbl').innerHTML=`<thead><tr>${h.map(c=>`<th data-k="${c[0]}">${c[1]}${sortK===c[0]?(sortD>0?' ▲':' ▼'):''}</th>`).join('')}</tr></thead><tbody>`+rs.map(r=>`<tr><td>${r.name}</td><td class="l">${tag(r.seg)}</td><td>${r.rec}</td><td>${r.n}</td><td>${M(r.sum)}</td><td>${r.R}</td><td>${r.F}</td><td>${r.M}</td><td style="color:${r.churn>=70?'var(--bad)':'inherit'}">${r.churn.toFixed(1)}</td><td>${r.debt?M(r.debt):'–'}</td></tr>`).join('')+'</tbody>';
+ document.querySelectorAll('#tbl th').forEach(t=>t.onclick=()=>{const k=t.dataset.k;sortD=sortK===k?-sortD:-1;sortK=k;table()});
+}
+function csv(t){return t.replace(/^\uFEFF/,'').trim().split(/\r?\n/).slice(1).map(l=>l.split(','))}
+function load(inp,key){const f=inp.files[0];if(!f)return;f.text().then(t=>{const rows=csv(t);
+ if(key==='C')data.C=rows.map(r=>[+r[0],r[1],r[2],r[3]]);else data.T=rows.map(r=>[+r[1],r[2],+r[3],+r[4]]);
+ try{localStorage.setItem('mt_data',JSON.stringify(data))}catch(e){}render()})}
+$('fc').onchange=e=>load(e.target,'C');$('ft').onchange=e=>load(e.target,'T');
+$('reset').onclick=()=>{data=EMB;try{localStorage.removeItem('mt_data')}catch(e){}render()};
+$('sf').innerHTML='<option value="">Все сегменты</option>'+SEGS.map(s=>`<option>${s}</option>`).join('');
+$('sf').onchange=e=>{filt=e.target.value;table()};$('q').oninput=table;
+$('dt').onchange=render;
+$('today').onclick=()=>{$('dt').value=realDay=ymd(new Date());render()};
+function tick(){const n=ymd(new Date());if(n!==realDay){const follow=$('dt').value===realDay||!realDay;realDay=n;if(follow){$('dt').value=n;render()}}}
+$('dt').value=realDay=ymd(new Date());render();
+setInterval(tick,60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)tick()});
+</script></body></html>

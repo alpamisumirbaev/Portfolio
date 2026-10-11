@@ -1,0 +1,52 @@
+{
+  "profile": {
+    "name": "Умирбаев Алпамыс",
+    "title": "Junior Data Analyst",
+    "about": "Анализ данных, SQL, Python, Power BI и Excel. Делаю дашборды, учётные системы и автоматизацию — от базы данных до готового интерфейса.",
+    "links": [
+      {"label": "GitHub", "url": "https://github.com/YOUR_USERNAME"},
+      {"label": "LinkedIn", "url": "https://www.linkedin.com/in/YOUR_PROFILE"},
+      {"label": "Telegram", "url": "https://t.me/YOUR_USERNAME"},
+      {"label": "Email", "url": "mailto:you@example.com"}
+    ]
+  },
+  "projects": [
+    {
+      "id": "rfm-dashboard",
+      "title": "Дашборд клиентской аналитики",
+      "summary": "RFM-сегментация, риск ухода (churn), CLV и aging долгов для дилера лекарств. Всё пересчитывается на текущую дату.",
+      "type": "html",
+      "file": "projects/rfm-dashboard/index.html",
+      "tags": ["SQL", "RFM", "Dashboard", "JavaScript"],
+      "date": "2026-10"
+    },
+    {
+      "id": "dealer-app",
+      "title": "Сайт учёта для дилера (Python + SQLite)",
+      "summary": "Веб-приложение: сотрудники вводят продажи, поставки и расходы, данные лежат в SQLite, дашборд встроен. Работает на ноутбуке без установки библиотек.",
+      "type": "app",
+      "download": "projects/dealer-app/dealer_app.zip",
+      "tags": ["Python", "SQLite", "Backend", "Web"],
+      "date": "2026-10",
+      "notes": "Приложение запускается на компьютере: установите Python, распакуйте архив и запустите start.bat (или python app.py). На GitHub Pages серверный код не выполняется, поэтому здесь доступна загрузка архива."
+    },
+    {
+      "id": "rfm-python",
+      "title": "RFM-отчёт на Python",
+      "summary": "Скрипт читает базу SQLite, считает RFM через оконную функцию NTILE и печатает сегменты клиентов.",
+      "type": "python",
+      "file": "projects/rfm-python/rfm_report.py",
+      "tags": ["Python", "SQL", "NTILE"],
+      "date": "2026-10"
+    },
+    {
+      "id": "data-excel",
+      "title": "Выгрузка данных в Excel",
+      "summary": "Клиенты и продажи дилера в виде книги Excel: просмотр листов прямо на сайте.",
+      "type": "excel",
+      "file": "projects/data-excel/dealer_data.xlsx",
+      "tags": ["Excel", "Data"],
+      "date": "2026-10"
+    }
+  ]
+}
