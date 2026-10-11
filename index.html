@@ -41,7 +41,7 @@ const safe=u=>/^(https?:|mailto:|[\w./%-]+$)/i.test(u||'')?u:'#';
 const ext=u=>((u||'').split('?')[0].split('.').pop()||'').toLowerCase();
 const driveId=s=>{if(!s)return'';const m=String(s).match(/\/(?:d|folders)\/([\w-]{15,})|[?&]id=([\w-]{15,})/);return m?(m[1]||m[2]):(/^[\w-]{15,}$/.test(s)?s:'')};
 const TYPES={html:'Демо',app:'Приложение',python:'Python',excel:'Excel',powerbi:'Power BI',drive:'Google Drive',link:'Ссылка'};
-function typeOf(p){if(p.type)return p.type;const e=ext(p.file||p.download);return{html:'html',htm:'html',py:'python',ipynb:'python',xlsx:'excel',xls:'excel',csv:'excel',pbix:'powerbi'}[e]||(p.embed?'powerbi':p.drive||p.driveFolder?'drive':'link')}
+function typeOf(p){if(p.type)return p.type;const e=ext(p.file||p.download);return{html:'html',htm:'html',py:'python',ipynb:'python',xlsx:'excel',xls:'excel',csv:'excel',pbix:'powerbi'}[e]||(p.colab?'python':p.embed?'powerbi':p.drive||p.driveFolder?'drive':'link')}
 let DB={profile:{},projects:[]},tag='',q='';
 async function boot(){
  try{const r=await fetch('portfolio.json',{cache:'no-cache'});if(!r.ok)throw 0;DB=await r.json()}catch(e){$('app').innerHTML='<p class="note">Не удалось загрузить portfolio.json. Если вы открыли файл двойным кликом, запустите локальный сервер (python -m http.server) или опубликуйте сайт на GitHub Pages.</p>';return}
@@ -65,6 +65,7 @@ function detail(p){
  const t=typeOf(p),did=driveId(p.drive),fid=driveId(p.driveFolder),acts=[];
  if(p.file&&t==='html')acts.push(`<a class="btn p" href="${esc(safe(p.file))}" target="_blank" rel="noopener">Открыть в новой вкладке</a>`);
  if(p.demo)acts.push(`<a class="btn p" href="${esc(safe(p.demo))}" target="_blank" rel="noopener">Живое демо</a>`);
+ if(p.colab)acts.push(`<a class="btn p" href="${esc(safe(p.colab))}" target="_blank" rel="noopener">Открыть в Google Colab</a>`);
  if(p.repo)acts.push(`<a class="btn" href="${esc(safe(p.repo))}" target="_blank" rel="noopener">Код на GitHub</a>`);
  if(p.file&&t!=='html')acts.push(`<a class="btn" href="${esc(safe(p.file))}" download>Скачать файл</a>`);
  if(p.download)acts.push(`<a class="btn p" href="${esc(safe(p.download))}" download>Скачать</a>`);

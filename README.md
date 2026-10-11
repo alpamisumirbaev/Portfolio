@@ -3,11 +3,11 @@
 ## Публикация на GitHub Pages (бесплатно)
 1. На github.com создайте репозиторий (например `portfolio`), публичный.
 2. Нажмите **Add file → Upload files** и перетащите всё содержимое этой папки (index.html, admin.html, portfolio.json, папку projects, файл .nojekyll). **Commit changes**.
-3. **Settings → Pages → Source: Deploy from a branch → main / (root) → Save.** Через минуту сайт появится по адресу `https://ВАШ_ЛОГИН.github.io/portfolio/`.
+3. **Settings → Pages → Source: Deploy from a branch → main / (root) → Save.** Через минуту сайт появится по адресу `https://alpamisumirbaev.github.io/Portfolio/`.
 4. В `portfolio.json` замените `YOUR_USERNAME`, `YOUR_PROFILE` и почту на свои ссылки.
 
 ## Добавить или удалить проект
-1. Откройте `https://ВАШ_ЛОГИН.github.io/portfolio/admin.html`, правьте проекты, нажмите **Скачать portfolio.json**.
+1. Откройте `https://alpamisumirbaev.github.io/Portfolio/admin.html`, правьте проекты, нажмите **Скачать portfolio.json**.
 2. В репозитории: **Add file → Upload files**, загрузите новые файлы проекта в `projects/<имя>/` и новый `portfolio.json` (он заменит старый).
 3. Через минуту сайт обновится. Удалить проект: кнопка «Удалить» в редакторе, затем загрузить JSON. Файлы проекта можно удалить в репозитории отдельно.
 
@@ -15,7 +15,7 @@
 | Тип | Что указать в редакторе | Как открывается |
 |---|---|---|
 | html | `file`: путь к .html | во встроенном окне |
-| python | `file`: путь к .py или .ipynb | код с подсветкой и кнопкой «Копировать» |
+| python | `file`: путь к .py или .ipynb; `colab`: ссылка на блокнот Colab | код с подсветкой; кнопка «Открыть в Google Colab» |
 | excel | `file`: путь к .xlsx / .csv в репозитории | таблица с листами прямо на сайте |
 | powerbi | `embed`: ссылка Publish to web; `images`: скриншоты; `drive`/`download`: файл .pbix | отчёт встраивается; .pbix только скачивается |
 | app | `download`: архив, `images`, `repo`, `demo` | карточка со скачиванием и ссылками |
